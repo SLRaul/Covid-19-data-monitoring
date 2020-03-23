@@ -1,18 +1,24 @@
 rm(list=ls())
+
+#change the directory the code
 setwd("/home/silva/R_Diretorio/sars-covid-19")
+
+
 library(data.table)
 library(lubridate)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 
+# extract the data from the repository from the computer
 new_cases <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
                    header = T)
 new_cases_date <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
-                        header = F)[1,c(-1,-2,-3,-4)] #atualizar aqui  
+                        header = F)[1,c(-1,-2,-3,-4)]  
 
 new_cases_date <- mdy(new_cases_date)
 
+############################# Beging from the started of the records#########################
 ############################# a partir do início da pesquisa #########################
 new_cases_france <- new_cases %>% select(-Lat, -Long) %>%  filter(`Country/Region` == "France")
 France_all <-  as.numeric(apply(new_cases_france[,c(-1,-2)], 2, sum))
@@ -57,6 +63,7 @@ dados <- dados %>% filter(Cases >0)
 
 tabela <- dados %>% spread(Country, Cases) 
 
+##################### Beging from the fist infecion detect ###########################
 ##################### dados a partir do primeiro dia ###########################
 br <- na.omit(tabela$Brazil)
 fr <- na.omit(tabela$France)
