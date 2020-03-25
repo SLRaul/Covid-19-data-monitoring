@@ -11,9 +11,9 @@ library(ggplot2)
 library(tidyr)
 
 # extract the data from the repository from the computer
-new_cases <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
+new_cases <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
                    header = T)
-new_cases_date <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
+new_cases_date <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
                         header = F)[1,c(-1,-2,-3,-4)]  
 
 new_cases_date <- mdy(new_cases_date)
@@ -95,9 +95,75 @@ dados_ %>% ggplot(aes(x=Day, y=Cases, group= Country, color= Country)) +
   geom_point() + geom_line()
 
 ########### por meio de ts #########
+library(forecast)
 #transformando em series temporais
 teste <- ts(Brazil, start = c(2020,01,2), frequency = 365.25)
+#plot(teste)
+teste %>% forecast::autoplot() + autolayer(meanf(Brazil, h=length(new_cases_date)),
+          series="Mean", PI=FALSE) +
+  autolayer(rwf(Brazil, h=length(new_cases_date)),
+            series="Naïve", PI=FALSE) +
+  autolayer(rwf(Brazil, h=length(new_cases_date), drift=TRUE, ),
+            series="Drift", PI=FALSE)
 
-autoplot(teste)
+# fonte;
+## https://towardsdatascience.com/the-impact-of-covid-19-data-analysis-and-visualization-560e54262dc
+
+
+
+
+rm(list=ls())
+
+#change the directory the code
+setwd("/home/silva/R_Diretorio/sars-covid-19")
+
+
+library(data.table)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(forecast)
+
+# extract the data from the repository from the computer
+new_cases <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+                   header = T)
+new_cases_date <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+                        header = F)[1,c(-1,-2,-3,-4)]  
+
+new_cases_date <- mdy(new_cases_date)
+
+#### choose the coutrys ###
+
+
+France_all <-  as.numeric(apply(
+  (new_cases %>% select(-`Province/State`,-Lat, -Long) %>% filter(`Country/Region` == "France"))[,c(-1)], 2, sum))
+
+Brazil <- as.numeric(new_cases %>% filter(`Country/Region` == 'Brazil') %>% select(-`Province/State`, -`Country/Region`,-Lat, -Long))
+
+Italy <- as.numeric(new_cases %>% filter(`Country/Region` == 'Italy') %>% select(-`Province/State`, -`Country/Region`,-Lat, -Long))
+
+Korea <- as.numeric(new_cases %>% filter(`Country/Region` == 'Korea, South') %>% select(-`Province/State`, -`Country/Region`,-Lat, -Long))
+
+Germany <- as.numeric(new_cases %>% filter(`Country/Region` == 'Germany') %>% select(-`Province/State`, -`Country/Region`,-Lat, -Long))
+
+
+
+### tranforming in time series
+
+Brazil <- ts(Brazil, start = c(2020,01,2), frequency = 365.25)
+Italy <- ts(Italy, start = c(2020,01,2), frequency = 365.25)
+Korea <- ts(Korea, start = c(2020,01,2), frequency = 365.25)
+Germany <- ts(Germany, start = c(2020,01,2), frequency = 365.25)
+
+data_ts <- ts.union(Brazil, Italy, Korea, Germany)
+
+### ploting the data
+data_ts %>% forecast::autoplot(facets=F)  + geom_point()+ theme_classic() +
+  ylab("Confirmed cases") + ggtitle("Confimerd numbers since 01/22/2020")
+
+###
+na.omit(data_ts)
+
 # fonte;
 ## https://towardsdatascience.com/the-impact-of-covid-19-data-analysis-and-visualization-560e54262dc
