@@ -23,57 +23,73 @@ Brazil <- as.numeric(new_cases %>% filter(`Country/Region` == 'Brazil') %>% sele
 
 Brazil <- Brazil[Brazil > 0]
 ########## previsão #########
-#definir função
-sir_equations <- function(time, variables, parameters) {
-  with(as.list(c(variables, parameters)), {
-    dS <- -beta * I * S
-    dI <-  beta * I * S - gamma * I
-    dR <-  gamma * I
-    return(list(c(dS, dI, dR)))
-  })
+rm(list = ls())
+library (deSolve)
+
+sis_model = function (current_timepoint, state_values, parameters)
+{
+  # create state variables (local variables)
+  S = state_values [1]        # susceptibles
+  I = state_values [2]        # infectious
+  
+  with ( 
+    as.list (parameters),     # variable names within parameters can be used 
+    {
+      # compute derivatives
+      dS = (-beta * S * I) + (gamma * I)
+      dI = ( beta * S * I) - (gamma * I)
+      
+      # combine results
+      results = c (dS, dI)
+      list (results)
+    }
+  )
 }
 
-#definir valores dos parametros
-parameters_values <- c(
-  beta  =  2.4/5.55, # infectious contact rate (/person/day)
-  gamma = (2.4/5.55)/2.4 #rgamma(1,shape = 0.25)   # recovery rate (/day)
-)
+#parametros
+contact_rate = 8                    # number of contacts per day
+transmission_probability = 0.07       # transmission probability
+infectious_period = 5.55                 # infectious period
 
-#defiir valore siiciais para parametros
-initial_values <- c(
-  S = 310000,  # number of susceptibles at time = 0
-  I =   1,  # number of infectious at time = 0
-  R =   0   # number of recovered (and immune) at time = 0
-)
+#computando os valores de tranmisção e de recuperação
+beta_value = 2.4/5.55#contact_rate * transmission_probability
+gamma_value = ((2.4/5.55)/2.4)#1 / infectious_period
 
-# perio de tempo de interesse
-time_values <- seq(0, 30) # days
+#numero reprodutivo
+Ro = beta_value / gamma_value
 
-# utilizando a função ode para resolver a função
-library(deSolve)
-sir_values_1 <- ode(
-  y = initial_values,
-  times = time_values,
-  func = sir_equations,
-  parms = parameters_values 
-)
-sir_values_1
+#parametros de dinamica da doença
+parameter_list = c (beta = beta_value, gamma = gamma_value)
 
-sir_values_1 <- as.data.frame(sir_values_1)
+#valores iniciais das sub pop
+X = 210000000      # susceptible hosts
+Y = 1           # infectious hosts
 
-with(sir_values_1, {
-  # plotting the time series of susceptibles:
-  plot(time, S, type = "l", col = "blue",
-       xlab = "time (days)", ylab = "number of people")
-  # adding the time series of infectious:
-  lines(time, I, col = "red")
-  # adding the time series of recovered:
-  lines(time, R, col = "green")
-})
+#pop total
+N = X + Y 
 
-legend("right", c("susceptibles", "infectious", "recovered"),
-       col = c("blue", "red", "green"), lty = 1, bty = "n")
+#valores inicial da eq diferenci
+initial_values = c (S = X/N, I = Y/N)
 
+#chamando os dias-ponto
+timepoints = seq (0, 100, by=1)
+
+#simulando um epidemia sis
+output = lsoda (initial_values, timepoints, sis_model, parameter_list)
+
+###### plot
+# susceptible hosts over time
+plot (I ~ time, data = output, type='l', ylim = c(0,1),
+      #,xlim=c(0,50),
+      col = 'red', ylab = 'S, I, S', main = 'SIS epidemic') 
+
+# remain on same frame
+par (new = TRUE)    
+
+# infectious hosts over time
+plot (S ~ time, data = output, type='b', ylim = c(0,1), col = 'blue', ylab = '', axes = FALSE) 
+
+lines(Brazil/210000000)
 # http://desolve.r-forge.r-project.org/
 # https://rpubs.com/choisy/sir
 
@@ -83,3 +99,7 @@ legend("right", c("susceptibles", "infectious", "recovered"),
 
 ## https://www.r-bloggers.com/sir-model-with-desolve-ggplot2/
 # https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0185528
+
+## https://rpubs.com/docblount/111138 #SIS
+
+## https://www.lewuathe.com/covid-19-dynamics-with-sir-model.html
