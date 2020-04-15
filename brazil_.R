@@ -23,7 +23,7 @@ Brazil <- as.numeric(new_cases %>% filter(`Country/Region` == 'Brazil') %>% sele
 
 Brazil <- Brazil[Brazil > 0]
 ########## previsão #########
-rm(list = ls())
+#rm(list = ls())
 library (deSolve)
 
 sis_model = function (current_timepoint, state_values, parameters)
@@ -87,7 +87,7 @@ plot (I ~ time, data = output, type='l', ylim = c(0,1),
 par (new = TRUE)    
 
 # infectious hosts over time
-plot (S ~ time, data = output, type='b', ylim = c(0,1), col = 'blue', ylab = '', axes = FALSE) 
+#plot (S ~ time, data = output, type='b', ylim = c(0,1), col = 'blue', ylab = '', axes = FALSE) 
 
 lines(Brazil/210000000)
 # http://desolve.r-forge.r-project.org/
