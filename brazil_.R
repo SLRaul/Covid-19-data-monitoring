@@ -79,12 +79,12 @@ output = lsoda (initial_values, timepoints, sis_model, parameter_list)
 
 ###### plot
 # susceptible hosts over time
-plot (I ~ time, data = output, type='l', ylim = c(0,1),
+plot (I ~ time, data = output, type='l', ylim = c(0,0.1),
       #,xlim=c(0,50),
       col = 'red', ylab = 'S, I, S', main = 'SIS epidemic') 
 
 # remain on same frame
-par (new = TRUE)    
+#par (new = TRUE)    
 
 # infectious hosts over time
 #plot (S ~ time, data = output, type='b', ylim = c(0,1), col = 'blue', ylab = '', axes = FALSE) 
