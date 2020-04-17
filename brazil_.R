@@ -52,8 +52,9 @@ transmission_probability = 0.07       # transmission probability
 infectious_period = 5.55                 # infectious period
 
 #computando os valores de tranmisção e de recuperação
-beta_value = 2.4/5.55#contact_rate * transmission_probability
-gamma_value = ((2.4/5.55)/2.4)#1 / infectious_period
+r_0 <- 2.39
+beta_value = r_0/5.55#contact_rate * transmission_probability
+gamma_value = ((r_0/5.55)/r_0)#1 / infectious_period
 
 #numero reprodutivo
 Ro = beta_value / gamma_value
@@ -79,7 +80,7 @@ output = lsoda (initial_values, timepoints, sis_model, parameter_list)
 
 ###### plot
 # susceptible hosts over time
-plot (I ~ time, data = output, type='l', ylim = c(0,0.1),
+plot (I ~ time, data = output, type='l', ylim = c(0,1),
       #,xlim=c(0,50),
       col = 'red', ylab = 'S, I, S', main = 'SIS epidemic') 
 
@@ -90,6 +91,9 @@ plot (I ~ time, data = output, type='l', ylim = c(0,0.1),
 #plot (S ~ time, data = output, type='b', ylim = c(0,1), col = 'blue', ylab = '', axes = FALSE) 
 
 lines(Brazil/210000000)
+
+cbind(output[1:51,],Brazil/210000000)
+
 # http://desolve.r-forge.r-project.org/
 # https://rpubs.com/choisy/sir
 

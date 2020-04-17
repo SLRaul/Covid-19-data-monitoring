@@ -85,7 +85,7 @@ dados_$Day <- c(1:length(fr),1:length(it),1:length(br),1:length(ko), 1:length(ge
 
 dados_ %>% ggplot(aes(x=Day, y=Cases, group= Country, color= Country)) +
   geom_point() + geom_line() + theme_bw()+ 
-  ggtitle("Dead cases from the fist confirmed")
+  ggtitle("New cases from the fist confirmed")
 
 ###############################################################################
 ############################# For deaths cases ################################
