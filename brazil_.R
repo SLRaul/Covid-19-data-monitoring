@@ -12,10 +12,11 @@ library(ggplot2)
 library(tidyr)
 
 # extract the data from the repository from the computer
-new_cases <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+new_cases <- fread("C:/Users/Raull/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
                    header = T)
-new_cases_date <- fread("~/Repositorios/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
-                        header = F)[1,c(-1,-2,-3,-4)]  
+
+new_cases_date <- fread("C:/Users/Raull/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+                    header = F)[1,c(-1,-2,-3,-4)]  
 
 cases_date <- mdy(new_cases_date)
 
@@ -80,7 +81,7 @@ output = lsoda (initial_values, timepoints, sis_model, parameter_list)
 
 ###### plot
 # susceptible hosts over time
-plot (I ~ time, data = output, type='l', ylim = c(0,1),
+plot (I ~ time, data = output, type='l', ylim = c(0,0.1),
       #,xlim=c(0,50),
       col = 'red', ylab = 'S, I, S', main = 'SIS epidemic') 
 
@@ -92,7 +93,7 @@ plot (I ~ time, data = output, type='l', ylim = c(0,1),
 
 lines(Brazil/210000000)
 
-cbind(output[1:51,],Brazil/210000000)
+cbind(output[1:53,],Brazil/210000000)
 
 # http://desolve.r-forge.r-project.org/
 # https://rpubs.com/choisy/sir
