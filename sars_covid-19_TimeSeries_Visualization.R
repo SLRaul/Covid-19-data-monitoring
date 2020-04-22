@@ -1,7 +1,7 @@
 rm(list=ls())
 
 #change the directory the code
-setwd("C:/Users/Raull/Documents/R_Diretorio/sars-covid-19")
+#setwd("C:/Users/Raull/Documents/R_Diretorio/sars-covid-19")
 
 
 library(data.table)
@@ -15,10 +15,10 @@ library(tidyr)
 ###############################################################################
 
 ## extract the data from the repository from the computer
-new_cases <- fread("C:/Users/Raull/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+new_cases <- fread("C:/Users/silva/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
                    header = T)
 
-cases_date <- fread("C:/Users/Raull/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+cases_date <- fread("C:/Users/silva/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
                         header = F)[1,c(-1,-2,-3,-4)]  
 ## ajusting the data
 cases_date <- mdy(cases_date)
@@ -91,7 +91,7 @@ dados_ %>% ggplot(aes(x=Day, y=Cases, group= Country, color= Country)) +
 ############################# For deaths cases ################################
 ###############################################################################
 
-death_cases <-  fread("C:/Users/Raull/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+death_cases <-  fread("C:/Users/silva/Documents/Repositorio/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
                      header = T)
 
 ## select the countrys
