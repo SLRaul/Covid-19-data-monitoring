@@ -35,6 +35,8 @@ colnames(NCPD) <- c("New_cases", "Date")
 ggplot(NCPD, aes(x = Date, y = New_cases)) + geom_col(col = "white", fill = "darkblue") + 
   ggtitle("New cases per day in Brazil") + ylab("New cases") + theme_bw()
 
+# ggplot(NCPD, aes(x = Date, y = New_cases)) + geom_point() + geom_line()+
+#   ggtitle("New cases per day in Brazil") + ylab("New cases") + theme_bw()
 #barplot(NCPD$New_cases)
 ########## new death cases per day ########## 
 NDCPD <- data.frame(diff(Brazil_death_cases), (cases_date[-1]))
