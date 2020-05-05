@@ -35,6 +35,17 @@ colnames(NCPD) <- c("New_cases", "Date")
 ggplot(NCPD, aes(x = Date, y = New_cases)) + geom_col(col = "white", fill = "darkblue") + 
   ggtitle("New cases per day in Brazil") + ylab("New cases") + theme_bw()
 
+
+# in log scale
+ncpd <- data.frame((Brazil_cases), (cases_date[]))
+colnames(ncpd) <- c("New_cases", "Date")
+ncpd <- ncpd[ncpd$New_cases > 100, ]
+# # Possible values for trans : 'log2', 'log10','sqrt'
+ggplot(ncpd, aes(x = Date, y = New_cases)) + geom_point() + geom_line() +
+  ggtitle("New cases since tem 100 case in log scale on Brazil") + ylab("New cases (log scale)") + theme_bw() +
+     scale_y_continuous(trans = 'log10') + ylim(c(100,10000))
+
+
 # ggplot(NCPD, aes(x = Date, y = New_cases)) + geom_point() + geom_line()+
 #   ggtitle("New cases per day in Brazil") + ylab("New cases") + theme_bw()
 #barplot(NCPD$New_cases)
@@ -44,6 +55,16 @@ colnames(NDCPD) <- c("New_death_cases", "Date")
 
 ggplot(NDCPD, aes(x = Date, y = New_death_cases)) + geom_col(col = "white", fill = "black") + 
   ggtitle("New deaths cases per day in Brazil") + ylab("Deaths per day") + theme_bw()
+
+
+# in log scale
+ndcpd <- data.frame((Brazil_death_cases), (cases_date[]))
+colnames(ndcpd) <- c("death_cases", "Date")
+ndcpd <- ndcpd[ndcpd$death_cases > 100, ]
+# # Possible values for trans : 'log2', 'log10','sqrt'
+ggplot(ndcpd, aes(x = Date, y = death_cases)) + geom_point() + geom_line() +
+  ggtitle("Death cases since tem 100 case in log scale on Brazil") + ylab("New cases (log scale)") + theme_bw() +
+  scale_y_continuous(trans = 'log10') + ylim(c(100,1000))
 
 ########## previs�o #########
 ########## prediction #########
@@ -70,13 +91,13 @@ sis_model = function (current_timepoint, state_values, parameters)
   )
 }
 
-#parametros
-contact_rate = 8                    # number of contacts per day
-transmission_probability = 0.07       # transmission probability
-infectious_period = 5.55                 # infectious period
+# #parametros
+# contact_rate = 8                    # number of contacts per day
+# transmission_probability = 0.07       # transmission probability
+# infectious_period = 5.55                 # infectious period
 
 #computando os valores de tranmisção e de recuperação
-r_0 <- 2.03 # imperial college r_0 = 2.0 - 2.4 - 2.6
+r_0 <- 2.04 # imperial college r_0 = 2.0 - 2.4 - 2.6
 beta_value = r_0/5.55#contact_rate * transmission_probability
 gamma_value = ((r_0/5.55)/r_0)#1 / infectious_period
 
