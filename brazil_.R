@@ -43,7 +43,7 @@ ncpd <- ncpd[ncpd$New_cases > 100, ]
 # # Possible values for trans : 'log2', 'log10','sqrt'
 ggplot(ncpd, aes(x = Date, y = New_cases)) + geom_point() + geom_line() +
   ggtitle("New cases since tem 100 case in log scale on Brazil") + ylab("New cases (log scale)") + theme_bw() +
-     scale_y_continuous(trans = 'log10') + ylim(c(100,10000))
+     scale_y_continuous(trans = 'log10')
 
 
 # ggplot(NCPD, aes(x = Date, y = New_cases)) + geom_point() + geom_line()+
@@ -64,7 +64,7 @@ ndcpd <- ndcpd[ndcpd$death_cases > 100, ]
 # # Possible values for trans : 'log2', 'log10','sqrt'
 ggplot(ndcpd, aes(x = Date, y = death_cases)) + geom_point() + geom_line() +
   ggtitle("Death cases since tem 100 case in log scale on Brazil") + ylab("New cases (log scale)") + theme_bw() +
-  scale_y_continuous(trans = 'log10') + ylim(c(100,1000))
+  scale_y_continuous(trans = 'log10') 
 
 ########## previsão #########
 ########## prediction #########
